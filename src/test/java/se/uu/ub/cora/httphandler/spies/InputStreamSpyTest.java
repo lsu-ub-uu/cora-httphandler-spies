@@ -16,24 +16,26 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.testspies.httphandler;
+package se.uu.ub.cora.httphandler.spies;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
+
+import java.util.function.Supplier;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import se.uu.ub.cora.httphandler.spies.InputStreamSpy;
 import se.uu.ub.cora.testutils.mcr.MethodCallRecorder;
 import se.uu.ub.cora.testutils.mrv.MethodReturnValues;
 import se.uu.ub.cora.testutils.spies.MCRSpy;
 
-public class HttpHandlerFactorySpyTest {
+public class InputStreamSpyTest {
 
-	private static final String URL = "someUrl";
-	private static final String ADD_CALL = "addCall";
 	private static final String ADD_CALL_AND_RETURN_FROM_MRV = "addCallAndReturnFromMRV";
-	HttpHandlerFactorySpy httpHandlerFactory;
+	InputStreamSpy inputStream;
 	private MCRSpy MCRSpy;
 	private MethodCallRecorder mcrForSpy;
 
@@ -41,32 +43,30 @@ public class HttpHandlerFactorySpyTest {
 	public void beforeMethod() {
 		MCRSpy = new MCRSpy();
 		mcrForSpy = MCRSpy.MCR;
-		httpHandlerFactory = new HttpHandlerFactorySpy();
+		inputStream = new InputStreamSpy();
 	}
 
 	@Test
 	public void testMakeSureSpyHelpersAreSetUp() throws Exception {
-		assertTrue(httpHandlerFactory.MCR instanceof MethodCallRecorder);
-		assertTrue(httpHandlerFactory.MRV instanceof MethodReturnValues);
-		assertSame(httpHandlerFactory.MCR.onlyForTestGetMRV(), httpHandlerFactory.MRV);
+		assertTrue(inputStream.MCR instanceof MethodCallRecorder);
+		assertTrue(inputStream.MRV instanceof MethodReturnValues);
+		assertSame(inputStream.MCR.onlyForTestGetMRV(), inputStream.MRV);
 	}
 
 	@Test
-	public void testDefaultFactor() throws Exception {
-		assertTrue(httpHandlerFactory.factor(URL) instanceof HttpHandlerSpy);
+	public void testDefaultGetResponseBinary() throws Exception {
+		assertEquals(inputStream.read(), 0);
 	}
 
 	@Test
-	public void testFactor() throws Exception {
-		httpHandlerFactory.MCR = MCRSpy;
+	public void testGetResponseBinary() throws Exception {
+		inputStream.MCR = MCRSpy;
 		MCRSpy.MRV.setDefaultReturnValuesSupplier(ADD_CALL_AND_RETURN_FROM_MRV,
-				HttpHandlerSpy::new);
+				(Supplier<Integer>) () -> 900);
 
-		HttpHandlerSpy retunedValue = (HttpHandlerSpy) httpHandlerFactory.factor(URL);
+		var returnedValue = inputStream.read();
 
-		mcrForSpy.assertMethodWasCalled(ADD_CALL_AND_RETURN_FROM_MRV);
-		mcrForSpy.assertParameter(ADD_CALL_AND_RETURN_FROM_MRV, 0, "url", URL);
-		mcrForSpy.assertReturn(ADD_CALL_AND_RETURN_FROM_MRV, 0, retunedValue);
+		mcrForSpy.assertReturn(ADD_CALL_AND_RETURN_FROM_MRV, 0, returnedValue);
 	}
 
 }

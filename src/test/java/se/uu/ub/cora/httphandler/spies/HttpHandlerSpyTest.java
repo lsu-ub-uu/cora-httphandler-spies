@@ -16,7 +16,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with Cora.  If not, see <http://www.gnu.org/licenses/>.
  */
-package se.uu.ub.cora.testspies.httphandler;
+package se.uu.ub.cora.httphandler.spies;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertSame;
@@ -28,6 +28,8 @@ import java.util.function.Supplier;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import se.uu.ub.cora.httphandler.spies.HttpHandlerSpy;
+import se.uu.ub.cora.httphandler.spies.InputStreamSpy;
 import se.uu.ub.cora.testutils.mcr.MethodCallRecorder;
 import se.uu.ub.cora.testutils.mrv.MethodReturnValues;
 import se.uu.ub.cora.testutils.spies.MCRSpy;
