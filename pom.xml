@@ -14,8 +14,8 @@
 
 	<properties>
 		<httphandler.version>2.6.0</httphandler.version>
-		<testutils.version>1.5.0</testutils.version>
-		<testutils-spies.version>1.0-SNAPSHOT</testutils-spies.version>
+		<testutils.version>1.6.0</testutils.version>
+		<testutils-spies.version>1.0.0</testutils-spies.version>
 	</properties>
 
 	<scm>
