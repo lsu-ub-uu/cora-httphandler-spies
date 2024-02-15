@@ -13,7 +13,7 @@
 	<name>httphandler-spies</name>
 
 	<properties>
-		<httphandler.version>2.11.0</httphandler.version>
+		<httphandler.version>2.16-SNAPSHOT</httphandler.version>
 		<testutils.version>1.11.0</testutils.version>
 		<testutils-spies.version>1.5.0</testutils-spies.version>
 	</properties>

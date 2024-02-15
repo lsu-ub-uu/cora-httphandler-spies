@@ -19,7 +19,8 @@
 package se.uu.ub.cora.httphandler.spies;
 
 import java.io.InputStream;
-import java.util.function.Supplier;
+import java.util.Collections;
+import java.util.Map;
 
 import se.uu.ub.cora.httphandler.HttpHandler;
 import se.uu.ub.cora.testutils.mcr.MethodCallRecorder;
@@ -32,10 +33,11 @@ public class HttpHandlerSpy implements HttpHandler {
 	public HttpHandlerSpy() {
 		MCR.useMRV(MRV);
 		MRV.setDefaultReturnValuesSupplier("getResponseText", String::new);
-		MRV.setDefaultReturnValuesSupplier("getResponseCode", (Supplier<Integer>) () -> 200);
+		MRV.setDefaultReturnValuesSupplier("getResponseCode", () -> 200);
 		MRV.setDefaultReturnValuesSupplier("getErrorText", String::new);
 		MRV.setDefaultReturnValuesSupplier("getHeaderField", String::new);
 		MRV.setDefaultReturnValuesSupplier("getResponseBinary", InputStreamSpy::new);
+		MRV.setDefaultReturnValuesSupplier("getResponseHeaders", Collections::emptyMap);
 	}
 
 	@Override
@@ -71,6 +73,11 @@ public class HttpHandlerSpy implements HttpHandler {
 	@Override
 	public void setStreamOutput(InputStream stream) {
 		MCR.addCall("stream", stream);
+	}
+
+	@Override
+	public Map<String, Object> getResponseHeaders() {
+		return (Map<String, Object>) MCR.addCallAndReturnFromMRV();
 	}
 
 	@Override

@@ -23,13 +23,13 @@ import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import se.uu.ub.cora.httphandler.spies.HttpHandlerSpy;
-import se.uu.ub.cora.httphandler.spies.InputStreamSpy;
 import se.uu.ub.cora.testutils.mcr.MethodCallRecorder;
 import se.uu.ub.cora.testutils.mrv.MethodReturnValues;
 import se.uu.ub.cora.testutils.spies.MCRSpy;
@@ -150,6 +150,23 @@ public class HttpHandlerSpyTest {
 	@Test
 	public void testDefaultGetHeaderField() throws Exception {
 		assertTrue(httpHandler.getHeaderField("name") instanceof String);
+	}
+
+	@Test
+	public void testGetResponseHeadersDefault() throws Exception {
+		assertEquals(httpHandler.getResponseHeaders(), Collections.emptyMap());
+	}
+
+	@Test
+	public void testGetResponseHeaders() throws Exception {
+		httpHandler.MCR = MCRSpy;
+
+		Map<String, String> expectedMap = Map.of("someKey", "someValue");
+		MCRSpy.MRV.setDefaultReturnValuesSupplier(ADD_CALL_AND_RETURN_FROM_MRV, () -> expectedMap);
+
+		var returnedMap = httpHandler.getResponseHeaders();
+
+		mcrForSpy.assertReturn(ADD_CALL_AND_RETURN_FROM_MRV, 0, returnedMap);
 	}
 
 	@Test
