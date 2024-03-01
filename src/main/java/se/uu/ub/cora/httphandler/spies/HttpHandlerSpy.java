@@ -76,8 +76,8 @@ public class HttpHandlerSpy implements HttpHandler {
 	}
 
 	@Override
-	public Map<String, Object> getResponseHeaders() {
-		return (Map<String, Object>) MCR.addCallAndReturnFromMRV();
+	public Map<String, String> getResponseHeaders() {
+		return (Map<String, String>) MCR.addCallAndReturnFromMRV();
 	}
 
 	@Override
